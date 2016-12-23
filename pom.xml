@@ -10,6 +10,11 @@
     <name>iris</name>
     <packaging>jar</packaging>
 
+    <scm>
+        <connection>scm:git:git@github.com:jeremybrooks/iris.git</connection>
+        <url>scm:git:git@github.com:jeremybrooks/iris.git</url>
+        <developerConnection>scm:git:git@github.com:jeremybrooks/iris.git</developerConnection>
+    </scm>
     <dependencies>
         <dependency>
             <groupId>org.imgscalr</groupId>
