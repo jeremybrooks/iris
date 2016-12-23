@@ -1,0 +1,75 @@
+JFDML JFormDesigner: "5.2.5.1.342" Java: "1.8.0_112-release" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class java.awt.GridBagLayout ) {
+			"$columnSpecs": "0:1.0"
+			"$rowSpecs": "0:1.0, 0, 0"
+			"$alignTop": true
+			"$alignLeft": true
+		} ) {
+			name: "this"
+			"defaultCloseOperation": 3
+			"$sizePolicy": 1
+			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "scrollPane1"
+				add( new FormComponent( "javax.swing.JList" ) {
+					name: "imageList"
+					"selectionMode": 0
+				} )
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.FlowLayout ) ) {
+				name: "panel1"
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnShow"
+					"text": "Show"
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "btnPlayActionPerformed", true ) )
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnHide"
+					"text": "Hide"
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "btnHideActionPerformed", true ) )
+				} )
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+				"gridy": 1
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "statusBar"
+				"text": "Loading..."
+				"foreground": new java.awt.Color( 0, 0, 0, 255 )
+				"font": new com.jformdesigner.model.SwingDerivedFont( null, 0, 10, true )
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+				"gridy": 2
+			} )
+			menuBar: new FormContainer( "javax.swing.JMenuBar", new FormLayoutManager( class javax.swing.JMenuBar ) ) {
+				name: "menuBar1"
+				add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
+					name: "menu1"
+					"text": "File"
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "menuItemSourceDirectory"
+						"text": "Image Source Directory"
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemSourceDirectoryActionPerformed", true ) )
+					} )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "menuItemRefresh"
+						"text": "Refresh"
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemRefreshActionPerformed", true ) )
+					} )
+					add( new FormComponent( "javax.swing.JPopupMenu$Separator" ) {
+						name: "separator1"
+					} )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "menuItemQuit"
+						"text": "Quit"
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemQuitActionPerformed", true ) )
+					} )
+				} )
+			}
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 700, 400 )
+		} )
+	}
+}
