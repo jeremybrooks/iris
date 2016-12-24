@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn">
+    <Appenders>
+        <RollingFile name="ROLLING" fileName="log/iris.log" filePattern="log/iris-%i.log">
+            <PatternLayout pattern="%d %p %c: %m%n"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="1 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="2"/>
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <Root level="debug">
+            <AppenderRef ref="ROLLING" />
+        </Root>
+    </Loggers>
+</Configuration>

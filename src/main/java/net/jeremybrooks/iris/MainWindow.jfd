@@ -24,11 +24,13 @@ new FormModel {
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "btnShow"
 					"text": "Show"
+					"enabled": false
 					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "btnPlayActionPerformed", true ) )
 				} )
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "btnHide"
 					"text": "Hide"
+					"enabled": false
 					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "btnHideActionPerformed", true ) )
 				} )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {

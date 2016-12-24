@@ -1,5 +1,8 @@
 package net.jeremybrooks.iris;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -17,17 +20,19 @@ public class Main {
 
   private static Properties properties = new Properties();
   private static File propertiesFile;
-
+  private static Logger logger = LogManager.getLogger("Main");
   /**
    * Program entry point.
    * @param args no command line arguments are supported.
    */
   public static void main(String... args) {
+    logger.info(String.format("%s version %s starting", Main.class.getPackage().getImplementationTitle(),
+        Main.class.getPackage().getImplementationVersion()));
     // set up preferences
     File prefs = new File(System.getProperty("user.home") + "/.iris");
     if (!prefs.exists()) {
        if (!prefs.mkdirs()) {
-         error("Could not create directory " + prefs.getAbsolutePath());
+         error("Could not create directory " + prefs.getAbsolutePath(), null);
        }
        propertiesFile = new File(prefs, "iris.properties");
        properties.setProperty(PROPERTY_SOURCE_DIRECTORY, "");
@@ -40,13 +45,13 @@ public class Main {
         properties.load(in);
       } catch (Exception e) {
         error("Error loading properties file " + propertiesFile.getAbsolutePath() +
-        "\n\nTry deleting the iris configuration directory and trying again.");
+        "\n\nTry deleting the iris configuration directory and trying again.", e);
       } finally {
         if (in != null) {
           try {
             in.close();
           } catch (Exception e) {
-            //ignore
+            logger.warn("Error closing input stream.", e);
           }
         }
       }
@@ -55,7 +60,8 @@ public class Main {
   }
 
 
-  private static void error(String errorMessage) {
+  private static void error(String errorMessage, Throwable cause) {
+    logger.error("Exiting due to error " + errorMessage, cause);
     JOptionPane.showMessageDialog(null, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
     System.exit(1);
   }
@@ -84,18 +90,19 @@ public class Main {
   public static void saveProperties() {
     OutputStream out = null;
     try {
+      logger.info("Saving properties " + properties);
       out = new FileOutputStream(propertiesFile);
       properties.store(out, "iris properties");
       out.flush();
       out.close();
     } catch (Exception e) {
-      System.out.println("Error saving properties.");
+      logger.error("Error saving properties.", e);
     } finally {
       if (out != null) {
         try {
           out.close();
         } catch (Exception e) {
-          // ignore
+          logger.warn("Error closing output stream.", e);
         }
       }
     }

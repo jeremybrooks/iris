@@ -57,7 +57,8 @@ public class MainWindow extends JFrame {
   public MainWindow() {
     devices = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
     initComponents();
-    this.setTitle(MainWindow.class.getPackage().getImplementationTitle() + " : " + MainWindow.class.getPackage().getImplementationVersion());
+    this.setTitle(MainWindow.class.getPackage().getImplementationTitle() + " : " +
+        MainWindow.class.getPackage().getImplementationVersion());
     this.imageList.setCellRenderer(new LabelListCellRenderer());
     loadPlaylist();
   }
@@ -88,7 +89,8 @@ public class MainWindow extends JFrame {
     if (source.trim().length() == 0) {
       this.statusBar.setText("No source directory.");
       JOptionPane.showMessageDialog(this,
-          "No image source directory is selected.\nGo to File -> Image Source Directory to select where your images will come from.",
+          "No image source directory is selected.\n" +
+              "Go to File -> Image Source Directory to select where your images will come from.",
           "No Files Loaded",
           JOptionPane.ERROR_MESSAGE);
     } else {
@@ -137,7 +139,8 @@ public class MainWindow extends JFrame {
       this.imageList.setSelectedIndex(0);
       if (model.size() == 0) {
         JOptionPane.showMessageDialog(this,
-            "No valid image files were found in directory " + source + ".\nAdd some files and go to File -> Refresh to reload the list.",
+            "No valid image files were found in directory " + source +
+                ".\nAdd some files and go to File -> Refresh to reload the list.",
             "No Files Found",
             JOptionPane.ERROR_MESSAGE);
       }
@@ -162,7 +165,7 @@ public class MainWindow extends JFrame {
           break;
         }
       }
-      File f = (File) this.imageList.getModel().getElementAt(this.imageList.getSelectedIndex());
+      File f = (File) this.imageList.getSelectedValue();
 
       if (window != null) {
         window.setVisible(false);
@@ -188,7 +191,7 @@ public class MainWindow extends JFrame {
             mode = Scalr.Mode.FIT_TO_HEIGHT;
           } else {
             size = gcBounds.width;
-            mode = Scalr.Mode.FIT_TO_HEIGHT;
+            mode = Scalr.Mode.FIT_TO_WIDTH;
           }
           Image resized = Scalr.resize(img, mode, size);
           img.flush();
@@ -241,10 +244,10 @@ public class MainWindow extends JFrame {
     setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     Container contentPane = getContentPane();
     contentPane.setLayout(new GridBagLayout());
-    ((GridBagLayout) contentPane.getLayout()).columnWidths = new int[]{0, 0};
-    ((GridBagLayout) contentPane.getLayout()).rowHeights = new int[]{0, 0, 0, 0};
-    ((GridBagLayout) contentPane.getLayout()).columnWeights = new double[]{1.0, 1.0E-4};
-    ((GridBagLayout) contentPane.getLayout()).rowWeights = new double[]{1.0, 0.0, 0.0, 1.0E-4};
+    ((GridBagLayout)contentPane.getLayout()).columnWidths = new int[] {0, 0};
+    ((GridBagLayout)contentPane.getLayout()).rowHeights = new int[] {0, 0, 0, 0};
+    ((GridBagLayout)contentPane.getLayout()).columnWeights = new double[] {1.0, 1.0E-4};
+    ((GridBagLayout)contentPane.getLayout()).rowWeights = new double[] {1.0, 0.0, 0.0, 1.0E-4};
 
     //======== menuBar1 ========
     {
@@ -293,8 +296,8 @@ public class MainWindow extends JFrame {
       scrollPane1.setViewportView(imageList);
     }
     contentPane.add(scrollPane1, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
-        GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-        new Insets(0, 0, 0, 0), 0, 0));
+      GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+      new Insets(0, 0, 0, 0), 0, 0));
 
     //======== panel1 ========
     {
@@ -302,6 +305,7 @@ public class MainWindow extends JFrame {
 
       //---- btnShow ----
       btnShow.setText("Show");
+      btnShow.setEnabled(false);
       btnShow.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
           btnPlayActionPerformed(e);
@@ -311,6 +315,7 @@ public class MainWindow extends JFrame {
 
       //---- btnHide ----
       btnHide.setText("Hide");
+      btnHide.setEnabled(false);
       btnHide.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
           btnHideActionPerformed(e);
@@ -319,16 +324,16 @@ public class MainWindow extends JFrame {
       panel1.add(btnHide);
     }
     contentPane.add(panel1, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
-        GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-        new Insets(0, 0, 0, 0), 0, 0));
+      GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+      new Insets(0, 0, 0, 0), 0, 0));
 
     //---- statusBar ----
     statusBar.setText("Loading...");
     statusBar.setForeground(Color.black);
     statusBar.setFont(statusBar.getFont().deriveFont(10f));
     contentPane.add(statusBar, new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0,
-        GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-        new Insets(0, 0, 0, 0), 0, 0));
+      GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+      new Insets(0, 0, 0, 0), 0, 0));
     setSize(700, 400);
     setLocationRelativeTo(getOwner());
     // JFormDesigner - End of component initialization  //GEN-END:initComponents
