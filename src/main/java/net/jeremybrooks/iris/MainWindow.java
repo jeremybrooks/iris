@@ -4,6 +4,9 @@
 
 package net.jeremybrooks.iris;
 
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 import org.imgscalr.Scalr;
 
 import java.awt.Canvas;
@@ -87,6 +90,8 @@ public class MainWindow extends JFrame {
   private void loadPlaylist() {
     String source = Main.getProperty(Main.PROPERTY_SOURCE_DIRECTORY);
     if (source.trim().length() == 0) {
+      this.btnHide.setEnabled(false);
+      this.btnShow.setEnabled(false);
       this.statusBar.setText("No source directory.");
       JOptionPane.showMessageDialog(this,
           "No image source directory is selected.\n" +
@@ -138,11 +143,16 @@ public class MainWindow extends JFrame {
       this.imageList.setModel(model);
       this.imageList.setSelectedIndex(0);
       if (model.size() == 0) {
+        this.btnHide.setEnabled(false);
+        this.btnShow.setEnabled(false);
         JOptionPane.showMessageDialog(this,
             "No valid image files were found in directory " + source +
                 ".\nAdd some files and go to File -> Refresh to reload the list.",
             "No Files Found",
             JOptionPane.ERROR_MESSAGE);
+      } else {
+        this.btnHide.setEnabled(true);
+        this.btnShow.setEnabled(true);
       }
     }
   }
@@ -258,30 +268,21 @@ public class MainWindow extends JFrame {
 
         //---- menuItemSourceDirectory ----
         menuItemSourceDirectory.setText("Image Source Directory");
-        menuItemSourceDirectory.addActionListener(new ActionListener() {
-          public void actionPerformed(ActionEvent e) {
-            menuItemSourceDirectoryActionPerformed(e);
-          }
-        });
+        menuItemSourceDirectory.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+        menuItemSourceDirectory.addActionListener(e -> menuItemSourceDirectoryActionPerformed(e));
         menu1.add(menuItemSourceDirectory);
 
         //---- menuItemRefresh ----
         menuItemRefresh.setText("Refresh");
-        menuItemRefresh.addActionListener(new ActionListener() {
-          public void actionPerformed(ActionEvent e) {
-            menuItemRefreshActionPerformed(e);
-          }
-        });
+        menuItemRefresh.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
+        menuItemRefresh.addActionListener(e -> menuItemRefreshActionPerformed(e));
         menu1.add(menuItemRefresh);
         menu1.addSeparator();
 
         //---- menuItemQuit ----
         menuItemQuit.setText("Quit");
-        menuItemQuit.addActionListener(new ActionListener() {
-          public void actionPerformed(ActionEvent e) {
-            menuItemQuitActionPerformed(e);
-          }
-        });
+        menuItemQuit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+        menuItemQuit.addActionListener(e -> menuItemQuitActionPerformed(e));
         menu1.add(menuItemQuit);
       }
       menuBar1.add(menu1);
@@ -306,21 +307,13 @@ public class MainWindow extends JFrame {
       //---- btnShow ----
       btnShow.setText("Show");
       btnShow.setEnabled(false);
-      btnShow.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-          btnPlayActionPerformed(e);
-        }
-      });
+      btnShow.addActionListener(e -> btnPlayActionPerformed(e));
       panel1.add(btnShow);
 
       //---- btnHide ----
       btnHide.setText("Hide");
       btnHide.setEnabled(false);
-      btnHide.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-          btnHideActionPerformed(e);
-        }
-      });
+      btnHide.addActionListener(e -> btnHideActionPerformed(e));
       panel1.add(btnHide);
     }
     contentPane.add(panel1, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,

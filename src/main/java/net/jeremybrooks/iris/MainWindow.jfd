@@ -52,11 +52,13 @@ new FormModel {
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "menuItemSourceDirectory"
 						"text": "Image Source Directory"
+						"accelerator": static javax.swing.KeyStroke getKeyStroke( 68, 4356, false )
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemSourceDirectoryActionPerformed", true ) )
 					} )
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "menuItemRefresh"
 						"text": "Refresh"
+						"accelerator": static javax.swing.KeyStroke getKeyStroke( 116, 0, false )
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemRefreshActionPerformed", true ) )
 					} )
 					add( new FormComponent( "javax.swing.JPopupMenu$Separator" ) {
@@ -65,6 +67,7 @@ new FormModel {
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "menuItemQuit"
 						"text": "Quit"
+						"accelerator": static javax.swing.KeyStroke getKeyStroke( 81, 4356, false )
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemQuitActionPerformed", true ) )
 					} )
 				} )
