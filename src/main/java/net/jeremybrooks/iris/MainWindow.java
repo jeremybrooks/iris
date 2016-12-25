@@ -4,6 +4,24 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.imgscalr.Scalr;
 
+import javax.imageio.ImageIO;
+import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JWindow;
+import javax.swing.KeyStroke;
+import javax.swing.ListSelectionModel;
+import javax.swing.WindowConstants;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.FlowLayout;
@@ -22,10 +40,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Comparator;
-
-import javax.imageio.ImageIO;
-
-import javax.swing.*;
 
 /**
  * @author Jeremy Brooks
@@ -56,7 +70,6 @@ public class MainWindow extends JFrame {
     this.setTitle(MainWindow.class.getPackage().getImplementationTitle() + " : " +
         MainWindow.class.getPackage().getImplementationVersion());
     this.imageList.setCellRenderer(new LabelListCellRenderer());
-    this.loadPlaylist();
   }
 
   private void menuItemQuitActionPerformed(ActionEvent e) {
@@ -76,11 +89,11 @@ public class MainWindow extends JFrame {
     }
   }
 
-  /*
+  /**
    * Load the images from the source directory.
    * Warn the user if there is no source directory or if no files were found in the directory.
    */
-  private void loadPlaylist() {
+  public void loadPlaylist() {
     ImageCache.getInstance().clearCache();
     String source = Main.getProperty(Main.PROPERTY_SOURCE_DIRECTORY);
     if (source.trim().length() == 0) {

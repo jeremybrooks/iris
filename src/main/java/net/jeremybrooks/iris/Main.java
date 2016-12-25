@@ -67,6 +67,7 @@ public class Main {
         }
       }
     }
+
     MainWindow mainWindow = new MainWindow();
     try {
       int height = Integer.parseInt(getProperty(PROPERTY_WINDOW_HEIGHT));
@@ -80,6 +81,7 @@ public class Main {
       mainWindow.setLocation(50, 50);
     }
     mainWindow.setVisible(true);
+    mainWindow.loadPlaylist();
     Runtime.getRuntime().addShutdownHook(new Thread(new ShutdownHook(mainWindow)));
   }
 
