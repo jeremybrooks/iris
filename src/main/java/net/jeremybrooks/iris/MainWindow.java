@@ -188,23 +188,25 @@ public class MainWindow extends JFrame {
           int size;
           Scalr.Mode mode;
 
-          // scale to fit the shortest of width/height
           this.logger.info(String.format("Target display size is %d x %d",
               gcBounds.width, gcBounds.height));
           this.logger.info(String.format("Image size is %d x %d",
               img.getWidth(), img.getHeight()));
 
-          if (gcBounds.width > gcBounds.height) {
-            size = gcBounds.height;
-            mode = Scalr.Mode.FIT_TO_HEIGHT;
-          } else {
+          if (img.getWidth() > img.getHeight()) {
+            // landscape
             size = gcBounds.width;
             mode = Scalr.Mode.FIT_TO_WIDTH;
+          } else {
+            // portrait
+            size = gcBounds.height;
+            mode = Scalr.Mode.FIT_TO_HEIGHT;
           }
           this.logger.info(String.format("Scaling to %d pixels for mode %s",
-              size, mode));
+              size, mode == Scalr.Mode.FIT_TO_HEIGHT ? "FIT_TO_HEIGHT" : "FIT_TO_WIDTH"));
           Image resized = Scalr.resize(img, mode, size);
-          this.logger.info(String.format("New size is %d x %d", resized.getWidth(null), resized.getHeight(null)));
+          this.logger.info(String.format("New size is %d x %d",
+              resized.getWidth(null), resized.getHeight(null)));
 
           img.flush();
 
