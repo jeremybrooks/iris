@@ -1,14 +1,9 @@
 package net.jeremybrooks.iris;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.imgscalr.Scalr;
 
-import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.FlowLayout;
@@ -20,7 +15,9 @@ import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Arrays;
@@ -28,22 +25,7 @@ import java.util.Comparator;
 
 import javax.imageio.ImageIO;
 
-import javax.swing.DefaultListModel;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JWindow;
-import javax.swing.ListSelectionModel;
-import javax.swing.WindowConstants;
+import javax.swing.*;
 
 /**
  * @author Jeremy Brooks
@@ -52,6 +34,7 @@ public class MainWindow extends JFrame {
   private GraphicsDevice[] devices;
   private JWindow imageDisplayWindow;
   private Logger logger = LogManager.getLogger();
+
   /**
    * Create the main window and fire off the image load.
    */
@@ -271,10 +254,10 @@ public class MainWindow extends JFrame {
     setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     Container contentPane = getContentPane();
     contentPane.setLayout(new GridBagLayout());
-    ((GridBagLayout)contentPane.getLayout()).columnWidths = new int[] {0, 0};
-    ((GridBagLayout)contentPane.getLayout()).rowHeights = new int[] {0, 0, 0, 0};
-    ((GridBagLayout)contentPane.getLayout()).columnWeights = new double[] {1.0, 1.0E-4};
-    ((GridBagLayout)contentPane.getLayout()).rowWeights = new double[] {1.0, 0.0, 0.0, 1.0E-4};
+    ((GridBagLayout) contentPane.getLayout()).columnWidths = new int[]{0, 0};
+    ((GridBagLayout) contentPane.getLayout()).rowHeights = new int[]{0, 0, 0, 0};
+    ((GridBagLayout) contentPane.getLayout()).columnWeights = new double[]{1.0, 1.0E-4};
+    ((GridBagLayout) contentPane.getLayout()).rowWeights = new double[]{1.0, 0.0, 0.0, 1.0E-4};
 
     //======== menuBar1 ========
     {
@@ -314,8 +297,8 @@ public class MainWindow extends JFrame {
       scrollPane1.setViewportView(imageList);
     }
     contentPane.add(scrollPane1, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
-      GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-      new Insets(0, 0, 0, 0), 0, 0));
+        GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+        new Insets(0, 0, 0, 0), 0, 0));
 
     //======== panel1 ========
     {
@@ -334,16 +317,16 @@ public class MainWindow extends JFrame {
       panel1.add(btnHide);
     }
     contentPane.add(panel1, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
-      GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-      new Insets(0, 0, 0, 0), 0, 0));
+        GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+        new Insets(0, 0, 0, 0), 0, 0));
 
     //---- statusBar ----
     statusBar.setText("Loading...");
     statusBar.setForeground(Color.black);
     statusBar.setFont(statusBar.getFont().deriveFont(10f));
     contentPane.add(statusBar, new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0,
-      GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-      new Insets(0, 0, 0, 0), 0, 0));
+        GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+        new Insets(0, 0, 0, 0), 0, 0));
     setSize(700, 400);
     setLocationRelativeTo(getOwner());
     // JFormDesigner - End of component initialization  //GEN-END:initComponents
