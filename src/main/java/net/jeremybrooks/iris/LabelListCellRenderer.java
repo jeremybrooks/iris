@@ -4,15 +4,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.imgscalr.Scalr;
 
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.image.BufferedImage;
+import java.io.File;
 
 public class LabelListCellRenderer extends JLabel implements ListCellRenderer<File> {
   private Logger logger = LogManager.getLogger();
