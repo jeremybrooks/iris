@@ -52,6 +52,7 @@ public class MainWindow extends JFrame {
       logger.info(sb);
     }
     initComponents();
+    this.setIconImage(new ImageIcon(getClass().getResource("/icon_128.png")).getImage());
     this.setTitle(MainWindow.class.getPackage().getImplementationTitle() + " : " +
         MainWindow.class.getPackage().getImplementationVersion());
     this.imageList.setCellRenderer(new LabelListCellRenderer());
