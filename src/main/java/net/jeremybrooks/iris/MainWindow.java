@@ -21,7 +21,6 @@ import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Arrays;
@@ -51,7 +50,7 @@ import javax.swing.WindowConstants;
  */
 public class MainWindow extends JFrame {
   private GraphicsDevice[] devices;
-  private JWindow window;
+  private JWindow imageDisplayWindow;
   private Logger logger = LogManager.getLogger();
   /**
    * Create the main window and fire off the image load.
@@ -186,20 +185,20 @@ public class MainWindow extends JFrame {
           break;
         }
       }
+      this.logger.info(String.format("Current device: %s; Target device: %s",
+          currentDevice.getIDstring(), targetDevice.getIDstring()));
       File f = (File) this.imageList.getSelectedValue();
 
-      if (window != null) {
-        window.setVisible(false);
-        window.dispose();
+      if (this.imageDisplayWindow != null) {
+        this.imageDisplayWindow.setVisible(false);
+        this.imageDisplayWindow.dispose();
       }
 
-      window = new JWindow(targetDevice.getDefaultConfiguration());
+      this.imageDisplayWindow = new JWindow(targetDevice.getDefaultConfiguration());
       for (GraphicsConfiguration configuration : targetDevice.getConfigurations()) {
-        Canvas c = new Canvas(configuration);
         Rectangle gcBounds = configuration.getBounds();
         int xoffs = gcBounds.x;
         int yoffs = gcBounds.y;
-        window.getContentPane().add(c);
 
         try {
           BufferedImage img = ImageIO.read(f);
@@ -207,6 +206,11 @@ public class MainWindow extends JFrame {
           Scalr.Mode mode;
 
           // scale to fit the shortest of width/height
+          this.logger.info(String.format("Target display size is %d x %d",
+              gcBounds.width, gcBounds.height));
+          this.logger.info(String.format("Image size is %d x %d",
+              img.getWidth(), img.getHeight()));
+
           if (gcBounds.width > gcBounds.height) {
             size = gcBounds.height;
             mode = Scalr.Mode.FIT_TO_HEIGHT;
@@ -214,18 +218,20 @@ public class MainWindow extends JFrame {
             size = gcBounds.width;
             mode = Scalr.Mode.FIT_TO_WIDTH;
           }
+          this.logger.info(String.format("Scaling to %d pixels for mode %s",
+              size, mode));
           Image resized = Scalr.resize(img, mode, size);
+          this.logger.info(String.format("New size is %d x %d", resized.getWidth(null), resized.getHeight(null)));
+
           img.flush();
 
-          JLabel lbl = new JLabel();
-          lbl.setIcon(new ImageIcon(resized));
-
+          // center based on target display size, add the label, and display the window
           int xPosition = (gcBounds.width - resized.getWidth(null)) / 2;
           int yPosition = (gcBounds.height - resized.getHeight(null)) / 2;
-          window.setLocation(xoffs + xPosition, yoffs + yPosition);
-          window.add(lbl);
-          window.pack();
-          window.setVisible(true);
+          this.imageDisplayWindow.setLocation(xoffs + xPosition, yoffs + yPosition);
+          this.imageDisplayWindow.add(new JLabel(new ImageIcon(resized)));
+          this.imageDisplayWindow.pack();
+          this.imageDisplayWindow.setVisible(true);
         } catch (Exception e) {
           JOptionPane.showMessageDialog(this,
               "Error displaying image " + f.getAbsolutePath() + "\n\n" + e,
@@ -236,10 +242,10 @@ public class MainWindow extends JFrame {
   }
 
   private void btnHideActionPerformed(ActionEvent e) {
-    if (this.window != null) {
-      this.window.setVisible(false);
-      this.window.dispose();
-      this.window = null;
+    if (this.imageDisplayWindow != null) {
+      this.imageDisplayWindow.setVisible(false);
+      this.imageDisplayWindow.dispose();
+      this.imageDisplayWindow = null;
     }
   }
 
