@@ -1,12 +1,11 @@
-/*
- * Created by JFormDesigner on Wed Dec 21 14:55:57 PST 2016
- */
-
 package net.jeremybrooks.iris;
 
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.imgscalr.Scalr;
 
 import java.awt.Canvas;
@@ -53,17 +52,28 @@ import javax.swing.WindowConstants;
 public class MainWindow extends JFrame {
   private GraphicsDevice[] devices;
   private JWindow window;
-
+  private Logger logger = LogManager.getLogger();
   /**
    * Create the main window and fire off the image load.
    */
   public MainWindow() {
     devices = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
+    logger.info("Found " + devices.length + " graphics devices.");
+    int i = 0;
+    for (GraphicsDevice device : devices) {
+      StringBuilder sb = new StringBuilder("Device " + i + " ID: ").append(device.getIDstring());
+      int j = 0;
+      for (GraphicsConfiguration configuration : device.getConfigurations()) {
+        sb.append("; Configuration " + j + " bounds: ").append(configuration.getBounds());
+        j++;
+      }
+      logger.info(sb);
+    }
     initComponents();
     this.setTitle(MainWindow.class.getPackage().getImplementationTitle() + " : " +
         MainWindow.class.getPackage().getImplementationVersion());
     this.imageList.setCellRenderer(new LabelListCellRenderer());
-    loadPlaylist();
+    this.loadPlaylist();
   }
 
   private void menuItemQuitActionPerformed(ActionEvent e) {
@@ -88,6 +98,7 @@ public class MainWindow extends JFrame {
    * Warn the user if there is no source directory or if no files were found in the directory.
    */
   private void loadPlaylist() {
+    ImageCache.getInstance().clearCache();
     String source = Main.getProperty(Main.PROPERTY_SOURCE_DIRECTORY);
     if (source.trim().length() == 0) {
       this.btnHide.setEnabled(false);

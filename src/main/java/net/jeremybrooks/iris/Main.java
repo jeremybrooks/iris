@@ -20,7 +20,7 @@ public class Main {
 
   private static Properties properties = new Properties();
   private static File propertiesFile;
-  private static Logger logger = LogManager.getLogger("Main");
+  private static Logger logger = LogManager.getLogger();
   /**
    * Program entry point.
    * @param args no command line arguments are supported.
