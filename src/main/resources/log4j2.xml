@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="warn">
     <Appenders>
-        <RollingFile name="ROLLING" fileName="log/iris.log" filePattern="log/iris-%i.log">
+        <RollingFile name="ROLLING" fileName="${sys:user.home}/.iris/iris.log" filePattern="log/iris-%i.log">
             <PatternLayout pattern="%d %p %c: %m%n"/>
             <Policies>
                 <SizeBasedTriggeringPolicy size="1 MB"/>
