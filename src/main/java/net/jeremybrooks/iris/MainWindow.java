@@ -21,6 +21,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JWindow;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 import javax.swing.WindowConstants;
 import java.awt.Color;
 import java.awt.Container;
@@ -39,7 +41,7 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Arrays;
-import java.util.Comparator;
+import java.util.List;
 
 /**
  * @author Jeremy Brooks
@@ -106,63 +108,13 @@ public class MainWindow extends JFrame {
           "No Files Loaded",
           JOptionPane.ERROR_MESSAGE);
     } else {
-      // list files and sort them
-      File[] files = new File(source).listFiles();
-      if (files == null) {
-        files = new File[0];
-      }
-      Arrays.sort(files, new Comparator<File>() {
-        public int compare(File o1, File o2) {
-          int n1 = extractNumber(o1.getName());
-          int n2 = extractNumber(o2.getName());
-          return n1 - n2;
-        }
-
-        private int extractNumber(String name) {
-          int i = 0;
-          try {
-            int s = name.indexOf('_') + 1;
-            int e = name.lastIndexOf('.');
-            String number = name.substring(s, e);
-            i = Integer.parseInt(number);
-          } catch (Exception e) {
-            i = 0; // if filename does not match the format
-            // then default to 0
-          }
-          return i;
-        }
-      });
-
-      // add files to the model if they are .jpg, .jpeg, or .png
-      DefaultListModel<File> model = new DefaultListModel<File>();
-      for (File f : files) {
-        String name = f.getName();
-        if (name.toLowerCase().endsWith(".jpg") ||
-            name.toLowerCase().endsWith(".jpeg") ||
-            name.toLowerCase().endsWith(".png")) {
-          File file = new File(Main.getProperty(Main.PROPERTY_SOURCE_DIRECTORY), name);
-          model.addElement(file);
-        }
-      }
-
-      // update the status bar and put the model on the list
-      this.statusBar.setText(source + ": " + model.size() + " files");
-      this.imageList.setModel(model);
-      this.imageList.setSelectedIndex(0);
-      if (model.size() == 0) {
-        this.btnHide.setEnabled(false);
-        this.btnShow.setEnabled(false);
-        JOptionPane.showMessageDialog(this,
-            "No valid image files were found in directory " + source +
-                ".\nAdd some files and go to File -> Refresh to reload the list.",
-            "No Files Found",
-            JOptionPane.ERROR_MESSAGE);
-      } else {
-        this.btnHide.setEnabled(true);
-        this.btnShow.setEnabled(true);
-      }
+      btnHide.setEnabled(false);
+      btnShow.setEnabled(false);
+      imageList.setModel(new DefaultListModel<File>());
+      new ImageProcessor(source).execute();
     }
   }
+
 
   private void btnPlayActionPerformed(ActionEvent e) {
     this.displaySelectedImage();
@@ -250,6 +202,72 @@ public class MainWindow extends JFrame {
 
   private void menuItemRefreshActionPerformed(ActionEvent e) {
     this.loadPlaylist();
+  }
+
+  /**
+   * Look at all the files in the source directory. If a file is a supported image type,
+   * create a cached thumbnail version and put the file in the list model.
+   */
+  class ImageProcessor extends SwingWorker<Void, File> {
+    private String source;
+
+    ImageProcessor(String source) {
+      this.source = source;
+    }
+
+    @Override
+    protected Void doInBackground() throws Exception {
+      statusBar.setIcon(new ImageIcon(getClass().getResource("/spinner.gif")));
+      // list files and sort them
+      File[] files = new File(source).listFiles();
+      if (files == null) {
+        files = new File[0];
+      }
+      Arrays.sort(files, new FilenameComparator());
+      for (File f : files) {
+        String name = f.getName();
+        if (name.toLowerCase().endsWith(".jpg") ||
+            name.toLowerCase().endsWith(".jpeg") ||
+            name.toLowerCase().endsWith(".png")) {
+          SwingUtilities.invokeLater(() -> statusBar.setText("Processing " + name + "..."));
+          File file = new File(source, name);
+          BufferedImage bufferedImage = ImageIO.read(file);
+          Thumbnail thumbnail = new Thumbnail(Scalr.resize(bufferedImage, Scalr.Mode.FIT_TO_WIDTH, 100),
+              bufferedImage.getWidth(), bufferedImage.getHeight());
+          ImageCache.getInstance().addImage(thumbnail, name);
+          bufferedImage.flush();
+          publish(file);
+        }
+      }
+      return null;
+    }
+
+    @Override
+    protected void process(List<File> chunks) {
+      for (File file : chunks) {
+        ((DefaultListModel<File>)imageList.getModel()).addElement(file);
+      }
+    }
+
+    @Override
+    protected void done() {
+      statusBar.setIcon(null);
+      int size = ((DefaultListModel<File>)imageList.getModel()).size();
+      statusBar.setText(source + ": " + size + " files");
+      imageList.setSelectedIndex(0);
+      if (size == 0) {
+        btnHide.setEnabled(false);
+        btnShow.setEnabled(false);
+        JOptionPane.showMessageDialog(MainWindow.this,
+            "No valid image files were found in directory " + source +
+                ".\nAdd some files and go to File -> Refresh to reload the list.",
+            "No Files Found",
+            JOptionPane.ERROR_MESSAGE);
+      } else {
+        btnHide.setEnabled(true);
+        btnShow.setEnabled(true);
+      }
+    }
   }
 
   private void initComponents() {

@@ -2,15 +2,12 @@ package net.jeremybrooks.iris;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.imgscalr.Scalr;
 
-import javax.imageio.ImageIO;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.image.BufferedImage;
 import java.io.File;
 
 public class LabelListCellRenderer extends JLabel implements ListCellRenderer<File> {
@@ -29,23 +26,15 @@ public class LabelListCellRenderer extends JLabel implements ListCellRenderer<Fi
       setForeground(Color.black);
     }
 
-    try {
-      Thumbnail thumbnail = ImageCache.getInstance().getImage(name);
-      if (thumbnail == null) {
-        BufferedImage bufferedImage = ImageIO.read(value);
-        thumbnail = new Thumbnail(Scalr.resize(bufferedImage, Scalr.Mode.FIT_TO_WIDTH, 100),
-            bufferedImage.getWidth(), bufferedImage.getHeight());
-        ImageCache.getInstance().addImage(thumbnail, name);
-        bufferedImage.flush();
-      }
+    Thumbnail thumbnail = ImageCache.getInstance().getImage(value.getName());
+    if (thumbnail == null) {
+      // NOTE: this should never happen. The thumbnail is cached before the file is added to the model.
+      logger.error("Missing thumbnail " + value.getName());
+      this.setIcon(null);
+      this.setText(name);
+    } else {
       this.setIcon(thumbnail);
       this.setText(name + "   [" + thumbnail.getOriginalWidth() + "x" + thumbnail.getOriginalHeight() + "]");
-    } catch (Exception e) {
-      logger.error("Error loading file " + value.getName(), e);
-      this.setIcon(null);
-      this.setBackground(Color.white);
-      this.setForeground(Color.red);
-      this.setText("Cannot load file " + value.getName());
     }
     return this;
   }
