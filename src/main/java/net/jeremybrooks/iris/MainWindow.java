@@ -36,10 +36,10 @@ import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.List;
 
@@ -59,10 +59,10 @@ public class MainWindow extends JFrame {
     logger.info("Found " + devices.length + " graphics devices.");
     int i = 0;
     for (GraphicsDevice device : devices) {
-      StringBuilder sb = new StringBuilder("Device " + i + " ID: ").append(device.getIDstring());
+      StringBuilder sb = new StringBuilder(MessageFormat.format("Device {0} ID: ", i)).append(device.getIDstring());
       int j = 0;
       for (GraphicsConfiguration configuration : device.getConfigurations()) {
-        sb.append("; Configuration " + j + " bounds: ").append(configuration.getBounds());
+        sb.append("; Configuration ").append(j).append(" bounds: ").append(configuration.getBounds());
         j++;
       }
       logger.info(sb);
@@ -74,11 +74,11 @@ public class MainWindow extends JFrame {
     this.imageList.setCellRenderer(new LabelListCellRenderer());
   }
 
-  private void menuItemQuitActionPerformed(ActionEvent e) {
+  private void menuItemQuitActionPerformed() {
     System.exit(0);
   }
 
-  private void menuItemSourceDirectoryActionPerformed(ActionEvent e) {
+  private void menuItemSourceDirectoryActionPerformed() {
     JFileChooser chooser = new JFileChooser();
     chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
     chooser.setCurrentDirectory(new File(Main.getProperty("source.directory")));
@@ -95,7 +95,7 @@ public class MainWindow extends JFrame {
    * Load the images from the source directory.
    * Warn the user if there is no source directory or if no files were found in the directory.
    */
-  public void loadPlaylist() {
+  void loadPlaylist() {
     ImageCache.getInstance().clearCache();
     String source = Main.getProperty(Main.PROPERTY_SOURCE_DIRECTORY);
     if (source.trim().length() == 0) {
@@ -110,13 +110,13 @@ public class MainWindow extends JFrame {
     } else {
       btnHide.setEnabled(false);
       btnShow.setEnabled(false);
-      imageList.setModel(new DefaultListModel<File>());
+      imageList.setModel(new DefaultListModel<>());
       new ImageProcessor(source).execute();
     }
   }
 
 
-  private void btnPlayActionPerformed(ActionEvent e) {
+  private void btnPlayActionPerformed() {
     this.displaySelectedImage();
   }
 
@@ -136,7 +136,7 @@ public class MainWindow extends JFrame {
       }
       this.logger.info(String.format("Current device: %s; Target device: %s",
           currentDevice.getIDstring(), targetDevice.getIDstring()));
-      File f = (File) this.imageList.getSelectedValue();
+      File f = this.imageList.getSelectedValue();
 
       if (this.imageDisplayWindow != null) {
         this.imageDisplayWindow.setVisible(false);
@@ -192,7 +192,7 @@ public class MainWindow extends JFrame {
     }
   }
 
-  private void btnHideActionPerformed(ActionEvent e) {
+  private void btnHideActionPerformed() {
     if (this.imageDisplayWindow != null) {
       this.imageDisplayWindow.setVisible(false);
       this.imageDisplayWindow.dispose();
@@ -200,7 +200,7 @@ public class MainWindow extends JFrame {
     }
   }
 
-  private void menuItemRefreshActionPerformed(ActionEvent e) {
+  private void menuItemRefreshActionPerformed() {
     this.loadPlaylist();
   }
 
@@ -278,7 +278,7 @@ public class MainWindow extends JFrame {
     menuItemRefresh = new JMenuItem();
     menuItemQuit = new JMenuItem();
     scrollPane1 = new JScrollPane();
-    imageList = new JList();
+    imageList = new JList<>();
     panel1 = new JPanel();
     btnShow = new JButton();
     btnHide = new JButton();
@@ -288,10 +288,10 @@ public class MainWindow extends JFrame {
     setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     Container contentPane = getContentPane();
     contentPane.setLayout(new GridBagLayout());
-    ((GridBagLayout) contentPane.getLayout()).columnWidths = new int[]{0, 0};
-    ((GridBagLayout) contentPane.getLayout()).rowHeights = new int[]{0, 0, 0, 0};
-    ((GridBagLayout) contentPane.getLayout()).columnWeights = new double[]{1.0, 1.0E-4};
-    ((GridBagLayout) contentPane.getLayout()).rowWeights = new double[]{1.0, 0.0, 0.0, 1.0E-4};
+    ((GridBagLayout)contentPane.getLayout()).columnWidths = new int[] {0, 0};
+    ((GridBagLayout)contentPane.getLayout()).rowHeights = new int[] {0, 0, 0, 0};
+    ((GridBagLayout)contentPane.getLayout()).columnWeights = new double[] {1.0, 1.0E-4};
+    ((GridBagLayout)contentPane.getLayout()).rowWeights = new double[] {1.0, 0.0, 0.0, 1.0E-4};
 
     //======== menuBar1 ========
     {
@@ -303,20 +303,20 @@ public class MainWindow extends JFrame {
         //---- menuItemSourceDirectory ----
         menuItemSourceDirectory.setText("Image Source Directory");
         menuItemSourceDirectory.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
-        menuItemSourceDirectory.addActionListener(e -> menuItemSourceDirectoryActionPerformed(e));
+        menuItemSourceDirectory.addActionListener(e -> menuItemSourceDirectoryActionPerformed());
         menu1.add(menuItemSourceDirectory);
 
         //---- menuItemRefresh ----
         menuItemRefresh.setText("Refresh");
         menuItemRefresh.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
-        menuItemRefresh.addActionListener(e -> menuItemRefreshActionPerformed(e));
+        menuItemRefresh.addActionListener(e -> menuItemRefreshActionPerformed());
         menu1.add(menuItemRefresh);
         menu1.addSeparator();
 
         //---- menuItemQuit ----
         menuItemQuit.setText("Quit");
         menuItemQuit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
-        menuItemQuit.addActionListener(e -> menuItemQuitActionPerformed(e));
+        menuItemQuit.addActionListener(e -> menuItemQuitActionPerformed());
         menu1.add(menuItemQuit);
       }
       menuBar1.add(menu1);
@@ -331,8 +331,8 @@ public class MainWindow extends JFrame {
       scrollPane1.setViewportView(imageList);
     }
     contentPane.add(scrollPane1, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
-        GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-        new Insets(0, 0, 0, 0), 0, 0));
+      GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+      new Insets(0, 0, 0, 0), 0, 0));
 
     //======== panel1 ========
     {
@@ -341,26 +341,26 @@ public class MainWindow extends JFrame {
       //---- btnShow ----
       btnShow.setText("Show");
       btnShow.setEnabled(false);
-      btnShow.addActionListener(e -> btnPlayActionPerformed(e));
+      btnShow.addActionListener(e -> btnPlayActionPerformed());
       panel1.add(btnShow);
 
       //---- btnHide ----
       btnHide.setText("Hide");
       btnHide.setEnabled(false);
-      btnHide.addActionListener(e -> btnHideActionPerformed(e));
+      btnHide.addActionListener(e -> btnHideActionPerformed());
       panel1.add(btnHide);
     }
     contentPane.add(panel1, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
-        GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-        new Insets(0, 0, 0, 0), 0, 0));
+      GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+      new Insets(0, 0, 0, 0), 0, 0));
 
     //---- statusBar ----
     statusBar.setText("Loading...");
     statusBar.setForeground(Color.black);
     statusBar.setFont(statusBar.getFont().deriveFont(10f));
     contentPane.add(statusBar, new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0,
-        GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-        new Insets(0, 0, 0, 0), 0, 0));
+      GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+      new Insets(0, 0, 0, 0), 0, 0));
     setSize(700, 400);
     setLocationRelativeTo(getOwner());
     // JFormDesigner - End of component initialization  //GEN-END:initComponents
@@ -373,7 +373,7 @@ public class MainWindow extends JFrame {
   private JMenuItem menuItemRefresh;
   private JMenuItem menuItemQuit;
   private JScrollPane scrollPane1;
-  private JList imageList;
+  private JList<File> imageList;
   private JPanel panel1;
   private JButton btnShow;
   private JButton btnHide;

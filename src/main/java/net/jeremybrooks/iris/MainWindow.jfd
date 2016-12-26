@@ -17,6 +17,9 @@ new FormModel {
 				add( new FormComponent( "javax.swing.JList" ) {
 					name: "imageList"
 					"selectionMode": 0
+					auxiliary() {
+						"JavaCodeGenerator.typeParameters": "File"
+					}
 				} )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.FlowLayout ) ) {
@@ -25,13 +28,13 @@ new FormModel {
 					name: "btnShow"
 					"text": "Show"
 					"enabled": false
-					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "btnPlayActionPerformed", true ) )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "btnPlayActionPerformed", false ) )
 				} )
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "btnHide"
 					"text": "Hide"
 					"enabled": false
-					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "btnHideActionPerformed", true ) )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "btnHideActionPerformed", false ) )
 				} )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
 				"gridy": 1
@@ -53,13 +56,13 @@ new FormModel {
 						name: "menuItemSourceDirectory"
 						"text": "Image Source Directory"
 						"accelerator": static javax.swing.KeyStroke getKeyStroke( 68, 4356, false )
-						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemSourceDirectoryActionPerformed", true ) )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemSourceDirectoryActionPerformed", false ) )
 					} )
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "menuItemRefresh"
 						"text": "Refresh"
 						"accelerator": static javax.swing.KeyStroke getKeyStroke( 116, 0, false )
-						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemRefreshActionPerformed", true ) )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemRefreshActionPerformed", false ) )
 					} )
 					add( new FormComponent( "javax.swing.JPopupMenu$Separator" ) {
 						name: "separator1"
@@ -68,7 +71,7 @@ new FormModel {
 						name: "menuItemQuit"
 						"text": "Quit"
 						"accelerator": static javax.swing.KeyStroke getKeyStroke( 81, 4356, false )
-						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemQuitActionPerformed", true ) )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemQuitActionPerformed", false ) )
 					} )
 				} )
 			}
