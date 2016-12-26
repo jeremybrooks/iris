@@ -163,10 +163,28 @@ public class MainWindow extends JFrame {
             // landscape
             size = gcBounds.width;
             mode = Scalr.Mode.FIT_TO_WIDTH;
+            // calculate final image height
+            int finalHeight = (int)(img.getHeight() * ((float)gcBounds.width / img.getWidth()));
+            this.logger.info(String.format("Landscape: Resize to WIDTH %d would produce image %dx%d",
+                size, size, finalHeight));
+            if (finalHeight > gcBounds.height) {
+              this.logger.info("Too tall; will size to height instead.");
+              size = gcBounds.height;
+              mode = Scalr.Mode.FIT_TO_HEIGHT;
+            }
           } else {
             // portrait
             size = gcBounds.height;
             mode = Scalr.Mode.FIT_TO_HEIGHT;
+            // calculate final image width
+            int finalWidth = (int)(img.getWidth() * ((float)gcBounds.height / img.getHeight()));
+            this.logger.info(String.format("Portrait: Resize to HEIGHT %d would produce image %dx%d",
+                size, size, finalWidth));
+            if (finalWidth > gcBounds.width) {
+              this.logger.info("Too wide; will size to width instead.");
+              size = gcBounds.width;
+              mode = Scalr.Mode.FIT_TO_WIDTH;
+            }
           }
           this.logger.info(String.format("Scaling to %d pixels for mode %s",
               size, mode == Scalr.Mode.FIT_TO_HEIGHT ? "FIT_TO_HEIGHT" : "FIT_TO_WIDTH"));
@@ -225,10 +243,12 @@ public class MainWindow extends JFrame {
       }
       Arrays.sort(files, new FilenameComparator());
       for (File f : files) {
+        logger.info("Got file " + f.getAbsolutePath());
         String name = f.getName();
         if (name.toLowerCase().endsWith(".jpg") ||
             name.toLowerCase().endsWith(".jpeg") ||
             name.toLowerCase().endsWith(".png")) {
+          logger.info("Creating thumbnail for " + name);
           SwingUtilities.invokeLater(() -> statusBar.setText("Processing " + name + "..."));
           File file = new File(source, name);
           BufferedImage bufferedImage = ImageIO.read(file);
@@ -237,6 +257,8 @@ public class MainWindow extends JFrame {
           ImageCache.getInstance().addImage(thumbnail, name);
           bufferedImage.flush();
           publish(file);
+        } else {
+          logger.info("Unsupported file type; ignoring.");
         }
       }
       return null;
