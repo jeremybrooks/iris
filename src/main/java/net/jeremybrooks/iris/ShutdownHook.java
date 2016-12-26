@@ -7,7 +7,7 @@ public class ShutdownHook implements Runnable {
    * Create a new Shutdown Hook instance.
    * @param mainWindow the main window.
    */
-  public ShutdownHook(MainWindow mainWindow) {
+  ShutdownHook(MainWindow mainWindow) {
     this.mainWindow = mainWindow;
   }
 
