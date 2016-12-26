@@ -40,6 +40,7 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -68,7 +69,16 @@ public class MainWindow extends JFrame {
       logger.info(sb);
     }
     initComponents();
-    this.setIconImage(new ImageIcon(getClass().getResource("/icon_128.png")).getImage());
+    List<Image> images = new ArrayList<>();
+    try {
+      images.add(ImageIO.read(getClass().getResource("/icon_16.png")));
+      images.add(ImageIO.read(getClass().getResource("/icon_32.png")));
+      images.add(ImageIO.read(getClass().getResource("/icon_48.png")));
+      images.add(ImageIO.read(getClass().getResource("/icon_128.png")));
+    } catch (Exception e) {
+      logger.warn("Error loading images for icon.", e);
+    }
+    this.setIconImages(images);
     this.setTitle(MainWindow.class.getPackage().getImplementationTitle() + " : " +
         MainWindow.class.getPackage().getImplementationVersion());
     this.imageList.setCellRenderer(new LabelListCellRenderer());

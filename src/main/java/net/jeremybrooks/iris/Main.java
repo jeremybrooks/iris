@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -15,11 +16,11 @@ import java.util.Properties;
  * @author Jeremy Brooks
  */
 public class Main {
-  public static final String PROPERTY_SOURCE_DIRECTORY = "source.directory";
-  public static final String PROPERTY_WINDOW_X = "window.x";
-  public static final String PROPERTY_WINDOW_Y = "window.y";
-  public static final String PROPERTY_WINDOW_HEIGHT = "window.height";
-  public static final String PROPERTY_WINDOW_WIDTH = "window.width";
+  static final String PROPERTY_SOURCE_DIRECTORY = "source.directory";
+  static final String PROPERTY_WINDOW_X = "window.x";
+  static final String PROPERTY_WINDOW_Y = "window.y";
+  static final String PROPERTY_WINDOW_HEIGHT = "window.height";
+  static final String PROPERTY_WINDOW_WIDTH = "window.width";
 
   private static Properties properties = new Properties();
   private static File propertiesFile;
@@ -37,7 +38,7 @@ public class Main {
     File configDir = new File(System.getProperty("user.home") + "/.iris");
     if (!configDir.exists()) {
       if (!configDir.mkdirs()) {
-        error("Could not create directory " + configDir.getAbsolutePath(), null);
+        error("Could not create directory " + configDir.getAbsolutePath(), new Exception());
       }
     }
     propertiesFile = new File(configDir, "iris.properties");
@@ -80,8 +81,10 @@ public class Main {
       mainWindow.setSize(700, 400);
       mainWindow.setLocation(50, 50);
     }
-    mainWindow.setVisible(true);
-    mainWindow.loadPlaylist();
+    SwingUtilities.invokeLater(() -> {
+      mainWindow.setVisible(true);
+      mainWindow.loadPlaylist();
+    });
     Runtime.getRuntime().addShutdownHook(new Thread(new ShutdownHook(mainWindow)));
   }
 
@@ -98,7 +101,7 @@ public class Main {
    * @param key   the key to set.
    * @param value the value for the key.
    */
-  public static void setProperty(String key, String value) {
+  static void setProperty(String key, String value) {
     properties.setProperty(key, value);
   }
 
@@ -108,14 +111,14 @@ public class Main {
    * @param key key to get value for.
    * @return current value for the key.
    */
-  public static String getProperty(String key) {
+  static String getProperty(String key) {
     return properties.getProperty(key);
   }
 
   /**
    * Save the current configuration.
    */
-  public static void saveProperties() {
+  static void saveProperties() {
     OutputStream out = null;
     try {
       logger.info("Saving properties " + properties);
