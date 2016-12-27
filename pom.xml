@@ -4,7 +4,7 @@
 
     <groupId>net.jeremybrooks</groupId>
     <artifactId>iris</artifactId>
-    <version>1.3-SNAPSHOT</version>
+    <version>1.4-SNAPSHOT</version>
     <name>Iris</name>
     <packaging>jar</packaging>
 
